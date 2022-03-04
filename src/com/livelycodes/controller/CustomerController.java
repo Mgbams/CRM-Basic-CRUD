@@ -18,64 +18,72 @@ import com.livelycodes.service.CustomerService;
 @Controller
 @RequestMapping("/customer")
 public class CustomerController {
-	
+
 	@Autowired
 	private CustomerService customerService;
-	
+
 	@GetMapping("/list")
 	public String listCustomers(Model theModel) {
-		
+
 		// Get customers from service
 		List<Customer> theCustomers = customerService.getCustomers();
-		
+
 		// Add the customers to the modal
+		theModel.addAttribute("customers", theCustomers);
+
+		return "list-customers";
+	}
+
+	@GetMapping("/showFormForAdd")
+	public String showFormForAdd(Model theModel) {
+
+		Customer customer = new Customer();
+		theModel.addAttribute("customer", customer);
+
+		return "customer-form";
+	}
+
+	@PostMapping("/customerProcessForm")
+	public String customerProcessForm(@ModelAttribute("customer") Customer customer) {
+
+		// Save the customer using our service
+		customerService.saveCustomer(customer);
+
+		return "redirect:/customer/list";
+	}
+
+	@GetMapping("/showFormForUpdate")
+	public String showFormForUpdate(@RequestParam("customerId") Long theId, Model theModel) {
+
+		// get the customer from our service
+		Customer theCustomer = customerService.getCustomerById(theId);
+
+		// set the customer as a model attribute
+		theModel.addAttribute("customer", theCustomer);
+
+		// send over to our form
+		return "customer-form";
+	}
+
+	@GetMapping("/delete")
+	public String delete(@RequestParam("deleteId") Long theId) {
+
+		// get the customer from our service
+		customerService.deleteCustomerById(theId);
+
+		// send over to the customer list page
+		return "redirect:/customer/list";
+	}
+
+	@GetMapping("/search")
+	public String searchCustomers(@RequestParam("theSearchName") String theSearchName, Model theModel) {
+		// search customers from the service
+		List<Customer> theCustomers = customerService.searchCustomers(theSearchName);
+
+		// add the customers to the model
 		theModel.addAttribute("customers", theCustomers);
 		
 		return "list-customers";
 	}
-	
-	
-	@GetMapping("/showFormForAdd")
-	public String showFormForAdd(Model theModel) {
-		
-		Customer customer = new Customer();
-		 theModel.addAttribute("customer", customer);
-		
-		return "customer-form";
-	}
-	
-	@PostMapping("/customerProcessForm")
-	public String customerProcessForm(@ModelAttribute("customer") Customer customer) {
-		
-		
-		//Save the customer using our service
-		customerService.saveCustomer(customer);
-		
-		return "redirect:/customer/list";
-	}
-	
-	@GetMapping("/showFormForUpdate")
-	public String showFormForUpdate(@RequestParam("customerId") Long theId, Model theModel) {
-		
-		// get the customer from our service
-		Customer theCustomer = customerService.getCustomerById(theId);
-		
-		// set the customer as a model attribute
-		theModel.addAttribute("customer", theCustomer);
-		
-		// send over to our form
-		return "customer-form";
-	}
-	
-	@GetMapping("/delete")
-	public String delete(@RequestParam("deleteId") Long theId) {
-		
-		// get the customer from our service
-		customerService.deleteCustomerById(theId);
-		
-		// send over to the customer list page
-		return "redirect:/customer/list";
-	}
-	
 
 }
