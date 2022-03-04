@@ -21,7 +21,7 @@
 			<h2>CRM - Customer Relationship Manager</h2>
 		</div>
 		<div class="button-container">
-			<button type="button" class="btn btn-info">Add Customer</button>
+			<button type="button" class="btn btn-info" onclick="window.location.href='showFormForAdd'; return false;">Add Customer</button>
 		</div>
 	</div>
 
@@ -35,14 +35,27 @@
 						<th>First Name</th>
 						<th>Last Name</th>
 						<th>Email</th>
+						<th>Action</th>
 					</tr>
 				</thead>
 				<tbody>
+				    <!-- Loop over and print customers -->
 					<c:forEach var="customer" items="${customers}">
+					
+					   <!-- Construct an update link with customer id -->
+					   <c:url var="updateLink" value="/customer/showFormForUpdate">
+					   		<c:param name="customerId" value="${customer.id}" />
+					   </c:url>
+					   
 						<tr>
 							<td scope="row">${ customer.firstName }</td>
 							<td>${ customer.lastName }</td>
 							<td>${ customer.email }</td>
+							
+							<!--Display the update link -->
+							<td>
+								<a href="${updateLink}">Update</a>
+							</td>
 						</tr>
 					</c:forEach>
 
