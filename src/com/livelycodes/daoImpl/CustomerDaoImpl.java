@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.livelycodes.business.Customer;
 import com.livelycodes.dao.CustomerDao;
+import com.livelycodes.utils.SortUtils;
 
 @Repository
 public class CustomerDaoImpl implements CustomerDao {
@@ -19,19 +20,41 @@ public class CustomerDaoImpl implements CustomerDao {
 	private SessionFactory sessionFactory;
 
 	@Override
-	public List<Customer> getCustomers() {
-		// get the current Hibernate session
+	public List<Customer> getCustomers(int theSortField) {
+		
+		// get the current hibernate session
 		Session currentSession = sessionFactory.getCurrentSession();
-
-		// Create query
-		Query<Customer> query = currentSession.createQuery("FROM Customer ORDER BY lastName", Customer.class);
-
-		// execute query and get the result list
-		List<Customer> customers = query.getResultList();
-
-		// Return the results
+				
+		// determine sort field
+		String theFieldName = null;
+		
+		switch (theSortField) {
+			case SortUtils.FIRST_NAME: 
+				theFieldName = "firstName";
+				break;
+			case SortUtils.LAST_NAME:
+				theFieldName = "lastName";
+				break;
+			case SortUtils.EMAIL:
+				theFieldName = "email";
+				break;
+			default:
+				// if nothing matches the default to sort by lastName
+				theFieldName = "lastName";
+		}
+		
+		// create a query  
+		String queryString = "from Customer order by " + theFieldName;
+		Query<Customer> theQuery = 
+				currentSession.createQuery(queryString, Customer.class);
+		
+		// execute query and get result list
+		List<Customer> customers = theQuery.getResultList();
+				
+		// return the results		
 		return customers;
 	}
+ 
 
 	@Override
 	public void saveCustomer(Customer customer) {

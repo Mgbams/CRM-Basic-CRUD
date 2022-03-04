@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.livelycodes.business.Customer;
 import com.livelycodes.service.CustomerService;
+import com.livelycodes.utils.SortUtils;
 
 @Controller
 @RequestMapping("/customer")
@@ -23,16 +24,27 @@ public class CustomerController {
 	private CustomerService customerService;
 
 	@GetMapping("/list")
-	public String listCustomers(Model theModel) {
-
-		// Get customers from service
-		List<Customer> theCustomers = customerService.getCustomers();
-
-		// Add the customers to the modal
+	public String listCustomers(Model theModel, @RequestParam(required=false) String sort) {
+		
+		// get customers from the service
+		List<Customer> theCustomers = null;
+		
+		// check for sort field
+		if (sort != null) {
+			int theSortField = Integer.parseInt(sort);
+			theCustomers = customerService.getCustomers(theSortField);			
+		}
+		else {
+			// no sort field provided ... default to sorting by last name
+			theCustomers = customerService.getCustomers(SortUtils.LAST_NAME);
+		}
+		
+		// add the customers to the model
 		theModel.addAttribute("customers", theCustomers);
-
+		
 		return "list-customers";
 	}
+
 
 	@GetMapping("/showFormForAdd")
 	public String showFormForAdd(Model theModel) {
