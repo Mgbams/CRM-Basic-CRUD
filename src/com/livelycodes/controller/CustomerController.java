@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -64,6 +65,16 @@ public class CustomerController {
 		
 		// send over to our form
 		return "customer-form";
+	}
+	
+	@GetMapping("/delete")
+	public String delete(@RequestParam("deleteId") Long theId) {
+		
+		// get the customer from our service
+		customerService.deleteCustomerById(theId);
+		
+		// send over to the customer list page
+		return "redirect:/customer/list";
 	}
 	
 
