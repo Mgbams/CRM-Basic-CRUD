@@ -53,3 +53,7 @@ tr:nth-child(odd) {background: #BBBBBB}
 .button-container button {
 	color: white;
 }
+
+th a {
+	color: white;
+}

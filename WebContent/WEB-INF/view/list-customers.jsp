@@ -61,9 +61,9 @@
 			<table class="table table-striped">
 				<thead>
 					<tr>
-						<th><a href="${sortLinkFirstName}">First Name</a></th>
-						<th><a href="${sortLinkLastName}">Last Name</a></th>
-						<th><a href="${sortLinkEmail}">Email</a></th>
+						<th><a href="${sortLinkFirstName}" title="sort by first name">First Name</a></th>
+						<th><a href="${sortLinkLastName}" title="sort by last name">Last Name</a></th>
+						<th><a href="${sortLinkEmail}" title="sort by email">Email</a></th>
 						<th>Action</th>
 					</tr>
 				</thead>
